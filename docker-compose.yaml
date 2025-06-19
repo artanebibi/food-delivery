@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:17.4
+    restart: always
+    environment:
+      POSTGRES_USER: fd
+      POSTGRES_PASSWORD: fd
+      POSTGRES_DB: food_delivery
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - 2346:5432
+
+  backend:
+    build:
+      context: ./food-delivery-backend
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/food_delivery
+      SPRING_DATASOURCE_USERNAME: fd
+      SPRING_DATASOURCE_PASSWORD: fd
+
+  frontend:
+    build:
+      context: ./food-delivery-frontend
+    ports:
+      - 3000:80
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
