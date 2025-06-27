@@ -35,6 +35,10 @@ jobs:
           npm ci
           npm run build
 
+      - name: Make mvnw executable
+        working-directory: food-delivery-backend
+        run: chmod +x mvnw
+        
       - name: Build and test backend
         working-directory: food-delivery-backend
         env:
