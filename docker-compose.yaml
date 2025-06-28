@@ -10,14 +10,15 @@ services:
       POSTGRES_DB: food_delivery
     volumes:
       - pgdata:/var/lib/postgresql/data
-    ports:
-      - 2346:5432
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "fd"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   backend:
     build:
       context: ./food-delivery-backend
-    ports:
-      - 8080:8080
     depends_on:
       - db
     environment:
@@ -29,7 +30,7 @@ services:
     build:
       context: ./food-delivery-frontend
     ports:
-      - 3000:80
+      - "3000:80"
     depends_on:
       - backend
 

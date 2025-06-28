@@ -5,16 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="567044ea-4560-4dfb-967a-db06ea01d12e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/food-delivery.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/food-delivery-backend/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/food-delivery-backend/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/food-delivery-backend/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/food-delivery-backend/src/main/java/mk/ukim/finki/fooddeliverybackend/config/security/JwtSecurityWebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/food-delivery-backend/src/main/java/mk/ukim/finki/fooddeliverybackend/config/security/JwtSecurityWebConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/food-delivery-backend/src/main/resources/application-dev.properties" beforeDir="false" afterPath="$PROJECT_DIR$/food-delivery-backend/src/main/resources/application-dev.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/food-delivery-frontend/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/food-delivery-frontend/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/food-delivery-frontend/src/axios/axios.js" beforeDir="false" afterPath="$PROJECT_DIR$/food-delivery-frontend/src/axios/axios.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,10 +20,22 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
-  <component name="KubernetesApiProvider"><![CDATA[{
-  "isMigrated": true
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "artanebibi"
+  }
 }]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/artanebibi/food-delivery",
+    "accountId": "28ac7dbb-92de-46c4-9e61-18fb5bd11878"
+  }
+}]]></component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
 }</component>
@@ -39,10 +47,11 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Docker.docker-compose.yaml: Compose Deployment.executor": "Run",
+    "Maven.food-delivery-backend [install].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Artan/Desktop/food-delivery",
+    "last_opened_file_path": "C:/Users/Artan/Desktop/devops_prj/food-delivery",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -56,9 +65,18 @@
       <recent name="C:\Users\Artan\Desktop\food-delivery" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Docker.docker-compose.yaml: Compose Deployment">
+    <configuration name="FoodDeliveryBackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="food-delivery-backend" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="mk.ukim.finki.fooddeliverybackend.FoodDeliveryBackendApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
-      <deployment type="docker-compose.yml" />
+      <deployment type="docker-compose.yml">
+        <settings />
+      </deployment>
       <method v="2" />
     </configuration>
     <configuration name="docker-compose.yaml: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
@@ -93,6 +111,7 @@
       <updated>1750376048682</updated>
       <workItem from="1750376049723" duration="74000" />
       <workItem from="1750376328658" duration="318000" />
+      <workItem from="1751114207884" duration="9712000" />
     </task>
     <servers />
   </component>
