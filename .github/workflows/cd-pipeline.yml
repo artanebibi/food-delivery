@@ -24,7 +24,7 @@ jobs:
         id: launch_instance
         run: |
           INSTANCE_ID=$(aws ec2 run-instances \
-            --launch-template LaunchTemplateId=${{ secrets.EC2_INSTANCE_ID }} \
+            --launch-template LaunchTemplateId=${{ secrets.EC2_LAUNCH_TEMPLATE_ID }} \
             --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=prod-instance}]" \
             --query 'Instances[0].InstanceId' \
             --output text)
