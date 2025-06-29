@@ -60,7 +60,10 @@ jobs:
       - name: Copy entire repo
         run: |
           scp -i ec2_key.pem -o StrictHostKeyChecking=no -r "$GITHUB_WORKSPACE"/* ec2-user@${{ needs.aws_instance_prep.outputs.public_ip }}:/home/ec2-user/
-
+      
+      - name: Maven build inside ec2-instance
+        run: ./mvnw clean package
+        
       - name: Deploy Containers
         run: |
           ssh -i ec2_key.pem -o StrictHostKeyChecking=no \
