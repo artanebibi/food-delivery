@@ -60,7 +60,7 @@ jobs:
       - name: Copy docker-compose.yml
         run: |
           scp -i ec2_key.pem -o StrictHostKeyChecking=no \
-            "$GITHUB_WORKSPACE/docker-compose.yml" \
+            "docker-compose.yml" \
             ec2-user@${{ needs.aws_instance_prep.outputs.public_ip }}:/home/ec2-user/
 
       - name: Deploy Containers
