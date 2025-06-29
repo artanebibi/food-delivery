@@ -63,6 +63,7 @@ jobs:
       
       - name: Maven build inside ec2-instance
         run: |
+          pwd
           cd food-delivery/food-delivery-backend
           ./mvnw clean package
         
