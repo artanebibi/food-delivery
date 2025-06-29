@@ -26,12 +26,17 @@ jobs:
 
       - name: Copy docker-compose.yml to EC2
         run: |
-          scp -i ec2_key.pem -o StrictHostKeyChecking=no ./docker-compose.yml ec2-user@${{ needs.aws_instance_prep.outputs.public_ip }}:/home/ec2-user/docker-compose.yml
+          scp -i ec2_key.pem -o StrictHostKeyChecking=no "$GITHUB_WORKSPACE/docker-compose.yml" ec2-user@${{ secrets.EC2_PUBLIC_IP }}:/home/ec2-user/
 
       - name: Deploy with Docker Compose
         run: |
-          ssh -i ec2_key.pem -o StrictHostKeyChecking=no ec2-user@${{ needs.aws_instance_prep.outputs.public_ip }} "
+          ssh -i ec2_key.pem -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_PUBLIC_IP }} "
+            # Navigate to directory and ensure permissions
             cd /home/ec2-user &&
+            # Stop existing containers (if any)
             docker-compose down || true &&
+            # Pull latest images
+            docker-compose pull &&
+            # Start new containers in detached mode
             docker-compose up -d
           "
