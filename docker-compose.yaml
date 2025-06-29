@@ -17,7 +17,7 @@ services:
       retries: 5
 
   backend:
-    image: artanebibi/food-delivery-backend
+    image: artanebibi/food-delivery-backend:latest
     depends_on:
       - db
     environment:
@@ -26,7 +26,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: fd
 
   frontend:
-    image: artanebibi/food-delivery-frontend
+    image: artanebibi/food-delivery-frontend:latest
     ports:
       - "3000:80"
     depends_on:
