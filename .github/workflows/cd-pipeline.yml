@@ -45,3 +45,31 @@ jobs:
             --query "Reservations[0].Instances[0].PublicIpAddress" \
             --output text)
           echo "public_ip=$PUBLIC_IP" >> $GITHUB_OUTPUT
+  deploy:
+    runs-on: ubuntu-latest
+    needs: aws_instance_prep
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH Key
+        run: |
+          echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ec2_key.pem
+          chmod 600 ec2_key.pem
+
+      - name: Copy docker-compose.yml
+        run: |
+          scp -i ec2_key.pem -o StrictHostKeyChecking=no \
+            "$GITHUB_WORKSPACE/docker-compose.yml" \
+            ec2-user@${{ needs.aws_instance_prep.outputs.public_ip }}:/home/ec2-user/
+
+      - name: Deploy Containers
+        run: |
+          ssh -i ec2_key.pem -o StrictHostKeyChecking=no \
+            ec2-user@${{ needs.aws_instance_prep.outputs.public_ip }} "
+            cd /home/ec2-user
+            docker-compose down || true
+            docker-compose pull
+            docker-compose up -d
+          "
+
