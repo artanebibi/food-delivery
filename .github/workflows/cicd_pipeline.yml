@@ -1,11 +1,9 @@
-name: Food Delivery CI/CD
+name: CI – Build & Push Docker Images
 
 on:
-  workflow_dispatch:
-    inputs:
-      deploy_confirm:
-        description: "Type YES to confirm EC2 deployment"
-        required: true
+  push:
+    branches:
+      - main
 
 env:
   DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -81,90 +79,4 @@ jobs:
         run: |
           docker build -t $FRONTEND_IMAGE:$GITHUB_SHA .
           docker push $FRONTEND_IMAGE:$GITHUB_SHA
-
-  aws_instance_prep:
-    needs: build-test-push
-    runs-on: ubuntu-latest
-    outputs:
-      instance_id: ${{ steps.set_env.outputs.instance_id }}
-      public_ip: ${{ steps.get_ip.outputs.public_ip }}
-    steps:
-      - name: Set branch name
-        id: vars
-        run: echo "branch_name=${{ needs.build-test-push.outputs.branch_name }}" >> "$GITHUB_ENV"
-
-      - name: Configure AWS CLI
-        run: |
-          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws configure set default.region ${{ secrets.AWS_REGION }}
-
-      - name: Check for existing EC2 instance
-        id: check_instance
-        run: |
-          INSTANCE_ID=$(aws ec2 describe-instances \
-            --filters "Name=tag:Name,Values=kiii-${{ env.branch_name }}" "Name=instance-state-name,Values=running" \
-            --query "Reservations[0].Instances[0].InstanceId" \
-            --output text)
-
-          if [[ "$INSTANCE_ID" == "None" ]]; then
-            echo "EXISTING_INSTANCE=false" >> $GITHUB_ENV
-          else
-            echo "EXISTING_INSTANCE=true" >> $GITHUB_ENV
-            echo "INSTANCE_ID=$INSTANCE_ID" >> $GITHUB_ENV
-          fi
-
-      - name: Launch EC2 Instance if needed
-        if: env.EXISTING_INSTANCE == 'false'
-        run: |
-          INSTANCE_ID=$(aws ec2 run-instances \
-            --launch-template LaunchTemplateId=${{ secrets.EC2_LAUNCH_TEMPLATE_ID }} \
-            --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=kiii-${{ env.branch_name }} }]" \
-            --query 'Instances[0].InstanceId' \
-            --output text)
-          echo "INSTANCE_ID=$INSTANCE_ID" >> $GITHUB_ENV
-
-      - name: Wait for instance to be ready
-        run: |
-          INSTANCE_ID=${{ env.INSTANCE_ID }}
-          echo "Waiting for EC2 ($INSTANCE_ID) to be ready..."
-          aws ec2 wait instance-status-ok --instance-ids $INSTANCE_ID
-
-      - name: Get EC2 Public IP
-        id: get_ip
-        run: |
-          PUBLIC_IP=$(aws ec2 describe-instances \
-            --instance-ids ${{ env.INSTANCE_ID }} \
-            --query "Reservations[0].Instances[0].PublicIpAddress" \
-            --output text)
-          echo "public_ip=$PUBLIC_IP" >> $GITHUB_OUTPUT
-
-      - name: Set instance ID output
-        id: set_env
-        run: echo "instance_id=${{ env.INSTANCE_ID }}" >> $GITHUB_OUTPUT
-
-  deploy:
-    needs: [build-test-push, aws_instance_prep]
-    runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.deploy_confirm == 'YES' }}
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Setup SSH Key
-        run: |
-          echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ec2_key.pem
-          chmod 600 ec2_key.pem
-
-      - name: Copy docker-compose.yml to EC2
-        run: |
-          scp -i ec2_key.pem -o StrictHostKeyChecking=no docker-compose.yml ec2-user@${{ needs.aws_instance_prep.outputs.public_ip }}:/home/ec2-user/docker-compose.yml
-
-      - name: Deploy with Docker Compose
-        run: |
-          ssh -i ec2_key.pem -o StrictHostKeyChecking=no ec2-user@${{ needs.aws_instance_prep.outputs.public_ip }} "
-            cd /home/ec2-user &&
-            docker-compose down || true &&
-            docker-compose up -d
-          "
 
