@@ -59,8 +59,7 @@ jobs:
       
       - name: Copy entire repo
         run: |
-          scp -i ec2_key.pem -o StrictHostKeyChecking=no -r "$GITHUB_WORKSPACE"/* \ 
-          ec2-user@${{ needs.aws_instance_prep.outputs.public_ip }}:/home/ec2-user/
+          scp -i ec2_key.pem -o StrictHostKeyChecking=no -r "$GITHUB_WORKSPACE"/* ec2-user@${{ needs.aws_instance_prep.outputs.public_ip }}:/home/ec2-user/
 
       - name: Deploy Containers
         run: |
