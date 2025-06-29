@@ -1,0 +1,38 @@
+name: CD – Deploy to EC2
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploy_confirm:
+        description: "Type YES to confirm EC2 deployment"
+        required: true
+
+env:
+  BACKEND_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/food-delivery-backend
+  FRONTEND_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/food-delivery-frontend
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.deploy_confirm == 'YES' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH Key
+        run: |
+          echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ec2_key.pem
+          chmod 600 ec2_key.pem
+
+      - name: Copy docker-compose.yml to EC2
+        run: |
+          scp -i ec2_key.pem -o StrictHostKeyChecking=no docker-compose.yml ec2-user@${{ secrets.EC2_PUBLIC_IP }}:/home/ec2-user/docker-compose.yml
+
+      - name: Deploy with Docker Compose
+        run: |
+          ssh -i ec2_key.pem -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_PUBLIC_IP }} "
+            cd /home/ec2-user &&
+            docker-compose down || true &&
+            docker-compose pull &&
+            docker-compose up -d
+          "
