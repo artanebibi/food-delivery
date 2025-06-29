@@ -56,15 +56,12 @@ jobs:
         run: |
           echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ec2_key.pem
           chmod 600 ec2_key.pem
-      # debugging 
-      - name: Find docker-compose.yml
-        run: find $GITHUB_WORKSPACE -name "docker-compose.yml"
       
       - name: Copy docker-compose.yml
         run: |
           scp -i ec2_key.pem -o StrictHostKeyChecking=no \
-            "docker-compose.yml" \
-            ec2-user@${{ needs.aws_instance_prep.outputs.public_ip }}:/home/ec2-user/
+          "$GITHUB_WORKSPACE/docker-compose.yaml" \
+          ec2-user@${{ needs.aws_instance_prep.outputs.public_ip }}:/home/ec2-user/
 
       - name: Deploy Containers
         run: |
