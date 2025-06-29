@@ -62,7 +62,9 @@ jobs:
           scp -i ec2_key.pem -o StrictHostKeyChecking=no -r "$GITHUB_WORKSPACE"/* ec2-user@${{ needs.aws_instance_prep.outputs.public_ip }}:/home/ec2-user/
       
       - name: Maven build inside ec2-instance
-        run: ./mvnw clean package
+        run: |
+          cd food-delivery/food-delivery-backend
+          ./mvnw clean package
         
       - name: Deploy Containers
         run: |
