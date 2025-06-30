@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: List
+items:
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: backend
+      namespace: devops-project
+    spec:
+      type: ClusterIP
+      selector:
+        app: backend
+
+      ports:
+        - port: 8080
+          targetPort: 8080
+          protocol: TCP
+
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: backend-deployment
+      namespace: devops-project
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: backend
+
+      strategy:
+        type: RollingUpdate
+        rollingUpdate:
+          maxUnavailable: 1
+          maxSurge: 1
+
+      minReadySeconds: 10
+
+      template:
+        metadata:
+          labels:
+            app: backend
+          namespace: devops-project
+
+        spec:
+          containers:
+            - name: backend-container
+              image: artanebibi/food-delivery-backend:latest
+              ports:
+                - containerPort: 8080
+
+          initContainers:
+            - name: wait-for-database
+              image: busybox
+              command: [ 'sh', '-c', 'until nc -z db 5432; do echo waiting for db; sleep 2; done;' ]
